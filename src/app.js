@@ -4,6 +4,10 @@ import userRouter from "../routes/userRouter.js";
 
 const app = express();
 
+// middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // routes
 app.get("/", (req, res) => {
   res.status(200).json({
