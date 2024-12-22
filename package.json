@@ -1,0 +1,20 @@
+{
+  "name": "elib",
+  "version": "1.0.0",
+  "description": "this elib web app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+
+  },
+  "keywords": [
+    "api",
+    "express",
+    "nodejs"
+  ],
+  "author": "akash kumar shukla <shuklaakash748972@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
