@@ -1,5 +1,6 @@
 import express from "express";
 import globalErrorHandler from "../middleware/globalErrorHandler.js";
+import userRouter from "../routes/userRouter.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.get("/", (req, res) => {
     error: false,
   });
 });
+app.use("/api/users", userRouter);
 
 // global error handler
 app.use(globalErrorHandler);
