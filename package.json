@@ -2,10 +2,11 @@
   "name": "elib",
   "version": "1.0.0",
   "description": "this elib web app",
-  "main": "app.js",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "api",
@@ -19,5 +20,8 @@
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
     "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
   }
 }
