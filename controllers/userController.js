@@ -3,6 +3,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { genJwtToken } from "../services/jsonWebToken.js";
 
+// register user in db
 const registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
 
@@ -60,4 +61,47 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-export { registerUser };
+// login user
+const loginUser = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  // Validation
+  if (!email || !password) {
+    const errorFields = [];
+    if (!email) errorFields.push("Email");
+    if (!password) errorFields.push("Password");
+
+    const errorMessage = `${errorFields.join(", ")} is required`;
+
+    const error = createHttpError(400, errorMessage);
+    return next(error);
+  }
+  let user = null;
+  try {
+    // check user exist
+    user = await User.findOne({ email });
+    if (!user) {
+      return next(createHttpError(401, "Invalid credentials"));
+    }
+
+    //   check password equal
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return next(createHttpError(401, "Invalid credentials"));
+    }
+  } catch (err) {
+    return next(createHttpError(500, "Error while getting user"));
+  }
+
+  try {
+    // Process
+    const token = genJwtToken({ sub: user._id });
+    return res.json({ accessToken: token });
+  } catch (err) {
+    return next(createHttpError(500, "Error while generating error"));
+  }
+
+  // Response
+};
+
+export { registerUser, loginUser };
