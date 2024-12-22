@@ -1,6 +1,7 @@
 import createHttpError from "http-errors";
+import User from "../models/userModel.js";
 
-const registerUser = (req, res, next) => {
+const registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
 
   // Validation
@@ -13,6 +14,13 @@ const registerUser = (req, res, next) => {
     const errorMessage = `${errorFields.join(", ")} is required`;
 
     const error = createHttpError(400, errorMessage);
+    return next(error);
+  }
+
+  //   check user already exist
+  const user = await User.findOne({ email });
+  if (user) {
+    const error = createHttpError(409, "Email already exist");
     return next(error);
   }
 
