@@ -1,15 +1,8 @@
 import express from "express";
 import { createBook } from "../controllers/bookController.js";
-import multer from "multer";
-import path from "path";
+import upload from "../middleware/multerMiddleware.js";
 
 const bookRouter = express();
-
-// create multer middleware for get file
-const upload = multer({
-  dest: path.relative(__dirname, "../../public/data/uploads"),
-  limits: { fileSize: 3e7 },
-});
 
 // book routes
 bookRouter.post(
