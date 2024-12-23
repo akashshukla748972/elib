@@ -25,13 +25,14 @@ const createBook = async (req, res, next) => {
     const newBook = await Book.create({
       title,
       genre,
-      author: "67687a0a78857d088c8486ae",
-      cover_image: uploadResult.uploadImage.url,
-      file: uploadResult.uploadPdf.url,
+      author: req.user._id,
+      cover_image: uploadResult.uploadImage.secure_url,
+      file: uploadResult.uploadPdf.secure_url,
     });
 
     return res.status(201).json({
       message: "Ok",
+      book_id: newBook._id,
       cover_image: newBook.cover_image,
       file: newBook.file,
     });

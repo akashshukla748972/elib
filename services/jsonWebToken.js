@@ -7,10 +7,4 @@ const genJwtToken = (payload) => {
   return token;
 };
 
-// verify jwt token
-const verifyJwtToken = (token) => {
-  const payload = jwt.verify(token, config.jwtSecret);
-  return payload || null;
-};
-
-export { genJwtToken, verifyJwtToken };
+export { genJwtToken };

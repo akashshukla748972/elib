@@ -1,7 +1,8 @@
 import { v2 as cloudinary } from "cloudinary";
 import { config } from "./config.js";
 import path from "node:path";
-import { fileURLToPath } from "node:url"; // Add this
+import { fileURLToPath } from "node:url";
+import fs from "fs";
 
 // __dirname को simulate करें
 const __filename = fileURLToPath(import.meta.url);
@@ -16,31 +17,35 @@ cloudinary.config({
 const uploadImageCloudinary = async (files) => {
   try {
     // Local file path resolve करें
-    let filePath = path.resolve(
+    const imageFilePath = path.resolve(
       __dirname,
       "../public/data/uploads",
       files?.cover_image[0]?.filename
     );
 
     // Image Cloudinary पर upload करें
-    const uploadImage = await cloudinary.uploader.upload(filePath, {
+    const uploadImage = await cloudinary.uploader.upload(imageFilePath, {
       filename_override: files?.cover_image[0]?.filename,
       folder: "book-cover",
       format: files?.cover_image[0]?.mimetype.split("/")[1],
     });
 
-    filePath = path.resolve(
+    const PdfFilePath = path.resolve(
       __dirname,
       "../public/data/uploads",
       files?.file[0]?.filename
     );
     // pdf Cloudinary पर upload करें
-    const uploadPdf = await cloudinary.uploader.upload(filePath, {
+    const uploadPdf = await cloudinary.uploader.upload(PdfFilePath, {
       resource_type: "raw",
       filename_override: files?.file[0]?.filename,
       folder: "file-pdf",
       format: files?.file[0]?.mimetype.split("/")[1],
     });
+
+    // delete temp file
+    await fs.promises.unlink(imageFilePath);
+    await fs.promises.unlink(PdfFilePath);
 
     return { uploadImage, uploadPdf };
   } catch (error) {
