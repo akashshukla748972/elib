@@ -1,5 +1,10 @@
 import express from "express";
-import { createBook } from "../controllers/bookController.js";
+import {
+  createBook,
+  getAllBook,
+  getSingleBook,
+  deleteBook,
+} from "../controllers/bookController.js";
 import upload from "../middleware/multerMiddleware.js";
 import verifyToken from "../middleware/verifyJwtToken.js";
 
@@ -15,5 +20,9 @@ bookRouter.post(
   ]),
   createBook
 );
+
+bookRouter.get("/", getAllBook);
+bookRouter.get("/:bookId", getSingleBook);
+bookRouter.delete("/delete/:bookId", verifyToken, deleteBook);
 
 export default bookRouter;
