@@ -77,9 +77,61 @@ const getSingleBook = async (req, res, next) => {
   }
 };
 
-// const updateBook = (req, res, next)=>{
+const updateBook = async (req, res, next) => {
+  const { title, genre } = req.body;
+  const { cover_image, file } = req.files || null;
 
-// }
+  const { bookId } = req.params;
+  try {
+    // check book exist
+    const book = await Book.findById(bookId);
+    console.log(
+      "Book====================================================",
+      book
+    );
+    if (!book) {
+      return next(createHttpError(404, "Book not found"));
+    }
+
+    let uploadResult = null;
+    if (cover_image || file) {
+      uploadResult = await uploadImageCloudinary(req.files);
+    }
+    console.log(uploadResult);
+
+    const newBook = await Book.findByIdAndUpdate(
+      bookId,
+      {
+        title,
+        genre,
+        author: req?.user?._id,
+        cover_image: {
+          url: uploadResult?.uploadImage?.secure_url,
+          public_id: uploadResult?.uploadImage?.public_id,
+        },
+        file: {
+          url: uploadResult?.uploadPdf?.secure_url,
+          public_id: uploadResult?.uploadPdf?.public_id,
+        },
+      },
+      { new: true }
+    );
+
+    if (cover_image) {
+      await cloudinary.uploader.destroy(book.cover_image.public_id);
+    }
+    if (file) {
+      await cloudinary.uploader.destroy(book.file.public_id);
+    }
+
+    return res.status(200).json({
+      data: newBook,
+    });
+  } catch (error) {
+    console.log("Error", error);
+    return next(createHttpError(500, "Error while updating book"));
+  }
+};
 
 const deleteBook = async (req, res, next) => {
   try {
@@ -107,4 +159,4 @@ const deleteBook = async (req, res, next) => {
   }
 };
 
-export { createBook, getAllBook, getSingleBook, deleteBook };
+export { createBook, getAllBook, getSingleBook, deleteBook, updateBook };

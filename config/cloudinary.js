@@ -16,36 +16,37 @@ cloudinary.config({
 
 const uploadImageCloudinary = async (files) => {
   try {
-    // Local file path resolve करें
-    const imageFilePath = path.resolve(
-      __dirname,
-      "../public/data/uploads",
-      files?.cover_image[0]?.filename
-    );
+    let uploadImage,
+      uploadPdf = null;
+    if (files.cover_image) {
+      const imageFilePath = path.resolve(
+        __dirname,
+        "../public/data/uploads",
+        files?.cover_image[0]?.filename
+      );
 
-    // Image Cloudinary पर upload करें
-    const uploadImage = await cloudinary.uploader.upload(imageFilePath, {
-      filename_override: files?.cover_image[0]?.filename,
-      folder: "book-cover",
-      format: files?.cover_image[0]?.mimetype.split("/")[1],
-    });
+      uploadImage = await cloudinary.uploader.upload(imageFilePath, {
+        filename_override: files?.cover_image[0]?.filename,
+        folder: "book-cover",
+        format: files?.cover_image[0]?.mimetype.split("/")[1],
+      });
+      await fs.promises.unlink(imageFilePath);
+    }
 
-    const PdfFilePath = path.resolve(
-      __dirname,
-      "../public/data/uploads",
-      files?.file[0]?.filename
-    );
-    // pdf Cloudinary पर upload करें
-    const uploadPdf = await cloudinary.uploader.upload(PdfFilePath, {
-      resource_type: "raw",
-      filename_override: files?.file[0]?.filename,
-      folder: "file-pdf",
-      format: files?.file[0]?.mimetype.split("/")[1],
-    });
-
-    // delete temp file
-    await fs.promises.unlink(imageFilePath);
-    await fs.promises.unlink(PdfFilePath);
+    if (files.file) {
+      const PdfFilePath = path.resolve(
+        __dirname,
+        "../public/data/uploads",
+        files?.file[0]?.filename
+      );
+      uploadPdf = await cloudinary.uploader.upload(PdfFilePath, {
+        resource_type: "raw",
+        filename_override: files?.file[0]?.filename,
+        folder: "file-pdf",
+        format: files?.file[0]?.mimetype.split("/")[1],
+      });
+      await fs.promises.unlink(PdfFilePath);
+    }
 
     return { uploadImage, uploadPdf };
   } catch (error) {

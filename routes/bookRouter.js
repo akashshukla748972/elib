@@ -4,6 +4,7 @@ import {
   getAllBook,
   getSingleBook,
   deleteBook,
+  updateBook,
 } from "../controllers/bookController.js";
 import upload from "../middleware/multerMiddleware.js";
 import verifyToken from "../middleware/verifyJwtToken.js";
@@ -23,6 +24,15 @@ bookRouter.post(
 
 bookRouter.get("/", getAllBook);
 bookRouter.get("/:bookId", getSingleBook);
+bookRouter.put(
+  "/update/:bookId",
+  upload.fields([
+    { name: "cover_image", maxCount: 1 },
+    { name: "file", maxCount: 1 },
+  ]),
+  verifyToken,
+  updateBook
+);
 bookRouter.delete("/delete/:bookId", verifyToken, deleteBook);
 
 export default bookRouter;
