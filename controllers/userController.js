@@ -104,4 +104,43 @@ const loginUser = async (req, res, next) => {
   // Response
 };
 
-export { registerUser, loginUser };
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // check
+    if (!email || !password) {
+      const errorFields = [];
+      if (!email) errorFields.push("Email");
+      if (!password) errorFields.push("Password");
+      const errorMessage = `${errorFields.join(", ")} is required`;
+      return next(createHttpError(400, errorMessage));
+    }
+
+    const user = await User.findOne({
+      $and: [{ _id: req.user._id, email: email }, { email: email }],
+    });
+
+    if (!user) {
+      return next(createHttpError(401, "Invalid credentials"));
+    }
+
+    // hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+
+    const updatePassword = await User.findByIdAndUpdate(req.user._id, {
+      password: hashPassword,
+    });
+
+    return res.status(200).json({
+      message: "Ok",
+      data: updatePassword,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(createHttpError(500, "Error while forgot password"));
+  }
+};
+
+export { registerUser, loginUser, forgotPassword };
