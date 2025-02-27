@@ -15,14 +15,14 @@ const Register = () => {
     console.log(userData);
   };
   return (
-    <div className={`fixed inset-0 flex justify-center items-center`}>
+    <div className="fixed inset-0 flex justify-center items-center bg-gray-100">
       <motion.div
         initial={{ opacity: 0, x: 60 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className={`px-4 sm:px-6 lg:px-8 py-6 shadow-2xl w-[350px] sm:w-[350px] md:w-[400px] lg:w-[450px]`}
+        className="px-6 py-8 shadow-2xl w-[350px] sm:w-[400px] bg-white rounded-lg"
       >
-        <div className="text-4xl font-semibold mb-6 w-fit mx-auto p-4 rounded-full bg-[#ECF0F1]">
+        <div className="text-4xl font-semibold mb-6 w-fit mx-auto p-4 rounded-full bg-gray-200">
           <UserRoundPlus size={25} className="animate-pulse" />
         </div>
 
@@ -69,7 +69,13 @@ const Register = () => {
               Register{" "}
             </button>
             <p className="text-[#2C3E50] text-base text-center my-2">
-              Already have account? <Link to={"/login"}>login</Link>
+              Already have account?{" "}
+              <Link
+                to={"/"}
+                className="font-semibold text-blue-600 hover:underline"
+              >
+                login
+              </Link>
             </p>
           </div>
         </form>
