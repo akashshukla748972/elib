@@ -30,20 +30,15 @@ const Register = () => {
           onSubmit={handleSubmit(userLogin)}
           className="flex flex-col gap-4 sm:gap-5 md:gap-6 lg:gap-6 w-full"
         >
-          <div className="form-control relative group">
-            <label
-              htmlFor="username"
-              className="absolute left-6 top-3 group-focus:block group-focus:-top-3 bg-gray-50 group-focus:px-2 transition transform duration-300"
-            >
-              User Name
-            </label>
+          <div className="form-control relative">
             {errors.username && (
               <span className="text-red-400">User name is required</span>
             )}
             <input
               {...register("username", { required: true })}
               type="text"
-              className="w-full border border-[#2C3E50]  px-6 py-3 rounded-md outline-none"
+              id="username"
+              className="w-full border border-[#2C3E50] px-6 py-3 rounded-md outline-none "
               placeholder="User Name"
             />
           </div>
@@ -71,7 +66,7 @@ const Register = () => {
           </div>
           <div className="form-control">
             <button className="w-full outline-none border-none px-6 py-3 bg-gradient-to-bl from-gray-700 to-gray-800 rounded-md text-[#FFFFFF]">
-              Login{" "}
+              Register{" "}
             </button>
             <p className="text-[#2C3E50] text-base text-center my-2">
               Already have account? <Link to={"/login"}>login</Link>
