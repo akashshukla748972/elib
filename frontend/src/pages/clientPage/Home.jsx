@@ -1,9 +1,10 @@
 import React from "react";
+import ClientRouting from "../../utils/ClientRouting";
 
 const Home = () => {
   return (
     <div>
-      <h1>Home</h1>
+      <ClientRouting />
     </div>
   );
 };
